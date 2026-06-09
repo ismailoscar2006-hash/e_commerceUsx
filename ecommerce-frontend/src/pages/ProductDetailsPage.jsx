@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   Container,
@@ -7,16 +7,18 @@ import {
   Typography,
   Button,
   Card,
-  CardMedia,
   TextField,
   Chip,
   Alert,
 } from '@mui/material'
 import { Add, Remove, ArrowBack, ShoppingCart } from '@mui/icons-material'
 import MainLayout from '../layouts/MainLayout'
-import LoadingSpinner from '../components/LoadingSpinner'
+import LoadingSpinner from '../components/Loading'
+import ProductImage from '../components/ProductImage'
+import PremiumButton from '../components/PremiumButton'
+import { formatPrice } from '../utils/formatPrice'
 import { productService } from '../services/productService'
-import { useCart } from '../hooks/useCart'
+import { useCart } from '../context/CartContext'
 
 export default function ProductDetailsPage() {
   const { id } = useParams()
@@ -94,25 +96,20 @@ export default function ProductDetailsPage() {
           <Grid item xs={12} md={6}>
             <Card
               sx={{
-                backgroundColor: '#f5f5f5',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: 400,
+                borderRadius: '20px',
+                overflow: 'hidden',
+                border: '1px solid rgba(15, 76, 255, 0.08)',
+                boxShadow: '0 8px 32px rgba(15, 23, 42, 0.08)',
               }}
             >
-              <CardMedia
-                component="img"
-                image={product.image_url || `http://127.0.0.1:8000/storage/default-product.jpg`}
+              <ProductImage
+                product={product}
                 alt={product.name}
-                onError={(e) => {
-                  e.target.src = `http://127.0.0.1:8000/storage/default-product.jpg`
-                }}
-                sx={{
-                  maxHeight: '100%',
-                  maxWidth: '100%',
-                  objectFit: 'contain',
-                }}
+                height={420}
+                hoverZoom={false}
+                borderRadius="20px"
+                objectFit="contain"
+                sx={{ backgroundColor: '#F8FAFC' }}
               />
             </Card>
           </Grid>
@@ -134,7 +131,7 @@ export default function ProductDetailsPage() {
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
               <Typography variant="h4" sx={{ fontWeight: 700, color: 'primary.main' }}>
-                ${product.price}
+                {formatPrice(product.price)}
               </Typography>
               {product.stock === 0 ? (
                 <Chip label="Out of Stock" color="error" />
@@ -197,7 +194,7 @@ export default function ProductDetailsPage() {
                 </Button>
               </Box>
 
-              <Button
+              <PremiumButton
                 fullWidth
                 variant="contained"
                 color="primary"
@@ -207,7 +204,7 @@ export default function ProductDetailsPage() {
                 disabled={product.stock === 0}
               >
                 Add to Cart
-              </Button>
+              </PremiumButton>
             </Box>
 
             <Box sx={{ p: 2, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
@@ -224,3 +221,5 @@ export default function ProductDetailsPage() {
     </MainLayout>
   )
 }
+
+

@@ -1,29 +1,21 @@
 import { Box, Typography, Button } from '@mui/material'
-import { ShoppingCart, Search } from '@mui/icons-material'
+import { ShoppingCart } from '@mui/icons-material'
 
-export default function EmptyState({ title, message, icon: Icon = ShoppingCart, action }) {
+export default function EmptyState({ icon = <ShoppingCart />, title, message, actionLabel, onAction }) {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '400px',
-        gap: 2,
-        py: 8,
-      }}
-    >
-      <Icon sx={{ fontSize: 80, color: 'text.disabled' }} />
-      <Typography variant="h5" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+    <Box sx={{ textAlign: 'center', py: 8 }}>
+      <Box sx={{ fontSize: 64, mb: 2, color: '#CBD5E1' }}>
+        {icon}
+      </Box>
+      <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
         {title}
       </Typography>
-      <Typography variant="body1" sx={{ color: 'text.disabled', maxWidth: 400, textAlign: 'center' }}>
+      <Typography sx={{ color: '#64748B', mb: 3 }}>
         {message}
       </Typography>
-      {action && (
-        <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-          {action.label}
+      {actionLabel && onAction && (
+        <Button variant="contained" onClick={onAction}>
+          {actionLabel}
         </Button>
       )}
     </Box>

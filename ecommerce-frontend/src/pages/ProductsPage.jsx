@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import {
   Container,
@@ -14,12 +14,12 @@ import {
 import { Search as SearchIcon } from '@mui/icons-material'
 import MainLayout from '../layouts/MainLayout'
 import ProductCard from '../components/ProductCard'
-import CategoryFilter from '../components/CategoryFilter'
-import LoadingSpinner from '../components/LoadingSpinner'
+import LoadingSpinner from '../components/Loading'
 import EmptyState from '../components/EmptyState'
 import { productService } from '../services/productService'
-import { useCart } from '../hooks/useCart'
-import { useAuth } from '../hooks/useAuth'
+import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
+import { TRANSLATIONS as T } from '../constants/translations'
 
 export default function ProductsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -80,7 +80,7 @@ export default function ProductsPage() {
     if (!isAuthenticated) {
       setSnackbar({
         open: true,
-        message: 'Please login to add items to cart',
+        message: 'Veuillez vous connecter pour ajouter des articles au panier',
         type: 'warning',
       })
       setTimeout(() => navigate('/login'), 1500)
@@ -92,20 +92,20 @@ export default function ProductsPage() {
       if (result.success) {
         setSnackbar({
           open: true,
-          message: 'Product added to cart!',
+          message: T.SUCCESS.ADDED_TO_CART,
           type: 'success',
         })
       } else {
         setSnackbar({
           open: true,
-          message: result.message || 'Failed to add to cart',
+          message: result.message || 'Erreur lors de l\'ajout au panier',
           type: 'error',
         })
       }
     } catch (error) {
       setSnackbar({
         open: true,
-        message: 'Error adding to cart',
+        message: 'Erreur lors de l\'ajout au panier',
         type: 'error',
       })
     }
@@ -114,17 +114,7 @@ export default function ProductsPage() {
   return (
     <MainLayout>
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '280px 1fr' }, gap: 3 }}>
-          {/* Sidebar */}
-          <Paper sx={{ p: 3, height: 'fit-content', position: { md: 'sticky' }, top: { md: 20 } }}>
-            <CategoryFilter
-              selectedCategory={selectedCategory}
-              onCategoryChange={handleCategoryChange}
-            />
-          </Paper>
-
-          {/* Main Content */}
-          <Box>
+        <Box sx={{ width: '100%' }}>
             {/* Search Bar */}
             <Box
               component="form"
@@ -137,7 +127,7 @@ export default function ProductsPage() {
             >
               <TextField
                 fullWidth
-                placeholder="Search products..."
+                placeholder={T.FORMS.SEARCH_PLACEHOLDER}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 InputProps={{
@@ -156,11 +146,12 @@ export default function ProductsPage() {
             ) : products.length > 0 ? (
               <>
                 <Grid container spacing={3} sx={{ mb: 4 }}>
-                  {products.map((product) => (
-                    <Grid item xs={12} sm={6} md={6} lg={4} key={product.id}>
+                  {products.map((product, index) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
                       <ProductCard
                         product={product}
                         onAddToCart={handleAddToCart}
+                        index={index}
                       />
                     </Grid>
                   ))}
@@ -181,11 +172,10 @@ export default function ProductsPage() {
               </>
             ) : (
               <EmptyState
-                title="No Products Found"
-                message="Try adjusting your search filters or browse other categories"
+                title="Aucun produit trouvé"
+                message="Essayez d'ajuster vos filtres de recherche ou recherchez d'autres produits"
               />
             )}
-          </Box>
         </Box>
       </Container>
 
@@ -206,3 +196,5 @@ export default function ProductsPage() {
     </MainLayout>
   )
 }
+
+

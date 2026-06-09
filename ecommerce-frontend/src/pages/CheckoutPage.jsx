@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Container,
@@ -13,9 +13,10 @@ import {
 } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
 import MainLayout from '../layouts/MainLayout'
-import LoadingSpinner from '../components/LoadingSpinner'
-import { useCart } from '../hooks/useCart'
-import { useAuth } from '../hooks/useAuth'
+import { formatPrice } from '../utils/formatPrice'
+import LoadingSpinner from '../components/Loading'
+import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 import { orderService } from '../services/orderService'
 
 export default function CheckoutPage() {
@@ -236,7 +237,7 @@ export default function CheckoutPage() {
                       </Typography>
                     </Box>
                     <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                      ${item.subtotal.toFixed(2)}
+                      {formatPrice(item.subtotal)}
                     </Typography>
                   </Box>
                 ))}
@@ -245,7 +246,7 @@ export default function CheckoutPage() {
               <Box sx={{ borderTop: '2px solid #eee', pt: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                   <Typography>Subtotal</Typography>
-                  <Typography>${getCartTotal().toFixed(2)}</Typography>
+                  <Typography>{formatPrice(getCartTotal())}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                   <Typography>Shipping</Typography>
@@ -253,7 +254,7 @@ export default function CheckoutPage() {
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                   <Typography>Tax (10%)</Typography>
-                  <Typography>${(getCartTotal() * 0.1).toFixed(2)}</Typography>
+                  <Typography>{formatPrice(getCartTotal() * 0.1)}</Typography>
                 </Box>
 
                 <Box
@@ -269,7 +270,7 @@ export default function CheckoutPage() {
                     Total
                   </Typography>
                   <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.main' }}>
-                    ${(getCartTotal() * 1.1).toFixed(2)}
+                    {formatPrice(getCartTotal() * 1.1)}
                   </Typography>
                 </Box>
               </Box>
@@ -280,3 +281,5 @@ export default function CheckoutPage() {
     </MainLayout>
   )
 }
+
+

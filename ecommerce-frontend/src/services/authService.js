@@ -1,4 +1,4 @@
-import api from '../api/axiosConfig'
+import api from '../api/axios'
 
 export const authService = {
   register: async (data) => {
@@ -41,7 +41,5 @@ export const authService = {
     return user ? JSON.parse(user) : null
   },
 
-  isAuthenticated: () => {
-    return !!localStorage.getItem('authToken')
-  },
+  isAuthenticated: () => !!localStorage.getItem('authToken'),
 }

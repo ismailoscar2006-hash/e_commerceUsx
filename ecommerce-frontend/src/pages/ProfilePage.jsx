@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import {
   Container,
   Grid,
@@ -11,7 +11,7 @@ import {
   CircularProgress,
 } from '@mui/material'
 import MainLayout from '../layouts/MainLayout'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../context/AuthContext'
 
 export default function ProfilePage() {
   const { user, updateProfile } = useAuth()
@@ -194,7 +194,7 @@ export default function ProfilePage() {
                     Email Status
                   </Typography>
                   <Typography variant="body2" sx={{ color: 'success.main' }}>
-                    ✓ Verified
+                    âœ“ Verified
                   </Typography>
                 </Box>
               </Box>
@@ -205,3 +205,4 @@ export default function ProfilePage() {
     </MainLayout>
   )
 }
+

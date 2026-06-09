@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import {
   Container,
   Grid,
@@ -18,10 +18,11 @@ import {
 } from '@mui/material'
 import { LocalShipping, Schedule, CheckCircle } from '@mui/icons-material'
 import MainLayout from '../layouts/MainLayout'
-import LoadingSpinner from '../components/LoadingSpinner'
+import { formatPrice } from '../utils/formatPrice'
+import LoadingSpinner from '../components/Loading'
 import EmptyState from '../components/EmptyState'
 import { orderService } from '../services/orderService'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../context/AuthContext'
 
 const statusConfig = {
   en_attente: {
@@ -86,8 +87,8 @@ export default function OrdersPage() {
       <MainLayout>
         <Container maxWidth="lg" sx={{ py: 8 }}>
           <EmptyState
-            title="No Orders Yet"
-            message="You haven't placed any orders yet. Start shopping now!"
+            title="Aucune commande"
+            message="Vous n'avez pas encore passé de commande. Commencez vos achats maintenant!"
           />
         </Container>
       </MainLayout>
@@ -159,7 +160,7 @@ export default function OrdersPage() {
                           variant="h6"
                           sx={{ fontWeight: 700, color: 'primary.main' }}
                         >
-                          ${order.total}
+                          {formatPrice(order.total)}
                         </Typography>
                       </Grid>
 
@@ -222,10 +223,10 @@ export default function OrdersPage() {
                                     {item.quantity}
                                   </TableCell>
                                   <TableCell align="right">
-                                    ${item.price}
+                                    {formatPrice(item.price)}
                                   </TableCell>
                                   <TableCell align="right">
-                                    ${item.subtotal.toFixed(2)}
+                                    {formatPrice(item.subtotal)}
                                   </TableCell>
                                 </TableRow>
                               ))}
@@ -242,17 +243,16 @@ export default function OrdersPage() {
                           }}
                         >
                           <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                            Subtotal: ${order.total.toFixed(2)}
+                            Subtotal: {formatPrice(order.total)}
                           </Typography>
                           <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                            Tax (10%): ${(order.total * 0.1).toFixed(2)}
+                            Tax (10%): {formatPrice(order.total * 0.1)}
                           </Typography>
                           <Typography
                             variant="h6"
                             sx={{ fontWeight: 700, color: 'primary.main' }}
                           >
-                            Total: $
-                            {(order.total * 1.1).toFixed(2)}
+                            Total: {formatPrice(order.total * 1.1)}
                           </Typography>
                         </Box>
                       </Box>
@@ -278,3 +278,5 @@ export default function OrdersPage() {
     </MainLayout>
   )
 }
+
+

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import {
   Box,
   Table,
@@ -14,7 +14,7 @@ import {
   Pagination,
 } from '@mui/material'
 import AdminLayout from '../../layouts/AdminLayout'
-import { adminService } from '../../services/adminService'
+import { orderService } from '../../services/orderService'
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([])
@@ -30,7 +30,7 @@ export default function AdminUsers() {
   const fetchUsers = async () => {
     try {
       setLoading(true)
-      const response = await adminService.getUsers(currentPage)
+      const response = await orderService.getUsers(currentPage)
       setUsers(response.data)
       setTotalPages(response.meta.last_page)
     } catch (error) {
@@ -104,3 +104,5 @@ export default function AdminUsers() {
     </AdminLayout>
   )
 }
+
+

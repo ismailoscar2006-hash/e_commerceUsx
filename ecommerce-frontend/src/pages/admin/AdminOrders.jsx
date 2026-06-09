@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import {
   Box,
   Table,
@@ -25,7 +25,7 @@ import {
   InputAdornment,
 } from '@mui/material'
 import AdminLayout from '../../layouts/AdminLayout'
-import { adminService } from '../../services/adminService'
+import { formatPrice } from '../../utils/formatPrice'
 import { orderService } from '../../services/orderService'
 
 const statusOptions = [
@@ -53,7 +53,7 @@ export default function AdminOrders() {
   const fetchOrders = async () => {
     try {
       setLoading(true)
-      const response = await adminService.getOrders(currentPage, status)
+      const response = await orderService.getOrders(currentPage, status)
       setOrders(response.data)
       setTotalPages(response.meta.last_page)
     } catch (error) {
@@ -85,7 +85,7 @@ export default function AdminOrders() {
     setSuccess('')
 
     try {
-      await adminService.updateOrderStatus(selectedOrder.id, newStatus)
+      await orderService.updateOrderStatus(selectedOrder.id, newStatus)
       setSuccess('Order status updated successfully')
       handleCloseDialog()
       fetchOrders()
@@ -150,7 +150,7 @@ export default function AdminOrders() {
               <TableRow key={order.id}>
                 <TableCell>#{order.id}</TableCell>
                 <TableCell>{order.user?.name}</TableCell>
-                <TableCell align="right">${order.total.toFixed(2)}</TableCell>
+                <TableCell align="right">{formatPrice(order.total)}</TableCell>
                 <TableCell>
                   <Chip
                     label={statusOptions.find((s) => s.value === order.status)?.label}
@@ -204,7 +204,7 @@ export default function AdminOrders() {
               <strong>Customer:</strong> {selectedOrder.user?.name}
             </Box>
             <Box>
-              <strong>Total:</strong> ${selectedOrder.total.toFixed(2)}
+              <strong>Total:</strong> {formatPrice(selectedOrder.total)}
             </Box>
             <FormControl fullWidth>
               <InputLabel>Status</InputLabel>
@@ -232,3 +232,5 @@ export default function AdminOrders() {
     </AdminLayout>
   )
 }
+
+

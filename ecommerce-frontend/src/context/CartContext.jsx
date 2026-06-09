@@ -4,6 +4,12 @@ import { AuthContext } from './AuthContext'
 
 export const CartContext = createContext()
 
+export const useCart = () => {
+  const context = useContext(CartContext)
+  if (!context) throw new Error('useCart must be used within CartProvider')
+  return context
+}
+
 export const CartProvider = ({ children }) => {
   const { isAuthenticated } = useContext(AuthContext)
   const [cart, setCart] = useState(null)

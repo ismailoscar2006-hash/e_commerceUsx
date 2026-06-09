@@ -1,4 +1,4 @@
-import api from '../api/axiosConfig'
+import api from '../api/axios'
 
 export const categoryService = {
   getCategories: async (page = 1) => {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import {
   Container,
@@ -12,7 +12,7 @@ import {
   Grid,
 } from '@mui/material'
 import MainLayout from '../layouts/MainLayout'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../context/AuthContext'
 
 export default function RegisterPage() {
   const navigate = useNavigate()
@@ -181,3 +181,4 @@ export default function RegisterPage() {
     </MainLayout>
   )
 }
+

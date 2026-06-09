@@ -1,7 +1,10 @@
+import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import ErrorBoundary from './components/ErrorBoundary'
+import { initCSRFToken } from './api/axios'
 
 // Pages
 import HomePage from './pages/HomePage'
@@ -22,11 +25,16 @@ import AdminOrders from './pages/admin/AdminOrders'
 import AdminUsers from './pages/admin/AdminUsers'
 
 function App() {
+  useEffect(() => {
+    initCSRFToken()
+  }, [])
+
   return (
-    <Router>
-      <AuthProvider>
-        <CartProvider>
-          <Routes>
+    <ErrorBoundary>
+      <Router>
+        <AuthProvider>
+          <CartProvider>
+            <Routes>
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/products" element={<ProductsPage />} />
@@ -112,10 +120,11 @@ function App() {
 
             {/* Catch all */}
             <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </CartProvider>
-      </AuthProvider>
-    </Router>
+            </Routes>
+          </CartProvider>
+        </AuthProvider>
+      </Router>
+    </ErrorBoundary>
   )
 }
 

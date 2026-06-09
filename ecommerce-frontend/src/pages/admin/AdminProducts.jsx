@@ -19,11 +19,14 @@ import {
   CircularProgress,
   IconButton,
   Pagination,
+  Typography,
 } from '@mui/material'
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material'
 import AdminLayout from '../../layouts/AdminLayout'
+import { formatPrice } from '../../utils/formatPrice'
 import { productService } from '../../services/productService'
 import { categoryService } from '../../services/categoryService'
+import { getProductImageUrl } from '../../utils/productImage'
 
 export default function AdminProducts() {
   const [products, setProducts] = useState([])
@@ -74,6 +77,14 @@ export default function AdminProducts() {
 
   const handleOpenDialog = (product = null) => {
     if (product) {
+      // Extract relative path from full URL if needed
+      let imagePath = product.image || ''
+      if (imagePath.startsWith('http')) {
+        // Extract path after /storage/
+        const parts = imagePath.split('/storage/')
+        imagePath = parts.length > 1 ? parts[1] : ''
+      }
+
       setEditingId(product.id)
       setFormData({
         name: product.name,
@@ -81,7 +92,7 @@ export default function AdminProducts() {
         price: product.price,
         stock: product.stock,
         category_id: product.category_id,
-        image: product.image || '',
+        image: imagePath,
       })
     } else {
       setEditingId(null)
@@ -172,6 +183,7 @@ export default function AdminProducts() {
         <Table>
           <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
             <TableRow>
+              <TableCell width="80">Image</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Category</TableCell>
               <TableCell align="right">Price</TableCell>
@@ -182,9 +194,23 @@ export default function AdminProducts() {
           <TableBody>
             {products.map((product) => (
               <TableRow key={product.id}>
+                <TableCell>
+                  <Box
+                    component="img"
+                    src={getProductImageUrl(product)}
+                    alt={product.name}
+                    sx={{
+                      width: 60,
+                      height: 60,
+                      objectFit: 'cover',
+                      borderRadius: '8px',
+                      backgroundColor: '#F1F5F9',
+                    }}
+                  />
+                </TableCell>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.category?.name || 'N/A'}</TableCell>
-                <TableCell align="right">${product.price}</TableCell>
+                <TableCell align="right">{formatPrice(product.price)}</TableCell>
                 <TableCell align="right">{product.stock}</TableCell>
                 <TableCell align="center">
                   <IconButton
@@ -285,11 +311,33 @@ export default function AdminProducts() {
           </TextField>
           <TextField
             fullWidth
-            label="Image URL"
+            label="Image Path (relative path from storage)"
             name="image"
             value={formData.image}
             onChange={handleChange}
+            placeholder="products/smartphones/iphone15promax.jpg"
+            helperText="Example: products/category/image.jpg"
           />
+          {formData.image && (
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="caption" sx={{ display: 'block', mb: 1 }}>
+                Aperçu de l'image:
+              </Typography>
+              <Box
+                component="img"
+                src={`http://127.0.0.1:8000/storage/${formData.image}`}
+                alt="Image preview"
+                sx={{
+                  maxWidth: '200px',
+                  maxHeight: '200px',
+                  borderRadius: '8px',
+                  border: '1px solid #ddd',
+                  objectFit: 'cover',
+                }}
+                onError={() => console.log('Image preview failed to load')}
+              />
+            </Box>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
